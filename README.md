@@ -58,3 +58,15 @@ index=soclab sourcetype="xml_security"
     EventID=5379, "Credential Read",
     1=1, "Other")
 | timechart count by EventLabel span=1h
+
+## Repository Structure
+- *dashboards/* – Splunk dashboard XML export file.
+- *logs/* – Sysmon and Windows Security event logs used for ingestion.
+- *screenshots/* – Visual proof of query execution and dashboard panels.
+- *README.md* – Project overview, setup details, and Splunk queries.
+- *LICENSE* – MIT License for open sharing.
+
+## Author
+Kishore Kumar Ravikumar  
+BSc Cyber Security | NTU
+October 2025
