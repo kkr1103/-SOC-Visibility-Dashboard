@@ -1,0 +1,122 @@
+This XML file does not appear to have any style information associated with it. The document tree is shown below.
+<form version="1.1" theme="dark">
+<label>SOC Visibility Board</label>
+<fieldset submitButton="false">
+<input type="time" token="field1">
+<label>time</label>
+<default>
+<earliest>-24h@h</earliest>
+<latest>now</latest>
+</default>
+</input>
+</fieldset>
+<row>
+<panel>
+<title>Top Windows Security Events by Frequency</title>
+<chart>
+<title>Displays the most common Windows Security Event IDs extracted from XML logs to identify which activities dominate the dataset.</title>
+<search>
+<query>index=soclab sourcetype="xml_security" | rex "<EventID>(?<EventID>\d+)</EventID>" | stats count by EventID | sort -count</query>
+<earliest>-24h@h</earliest>
+<latest>now</latest>
+</search>
+<option name="charting.chart">bar</option>
+<option name="charting.drilldown">none</option>
+</chart>
+</panel>
+</row>
+<row>
+<panel>
+<title>Successful User Logons (Event ID 4624)</title>
+<chart>
+<title>Tracks all successful authentication events over time, helping detect login bursts or unusual access periods.</title>
+<search>
+<query>index=soclab sourcetype="xml_security" | rex "<EventID>(?<EventID>\d+)</EventID>" | search EventID=4624 | timechart count span=30m</query>
+<earliest>-24h@h</earliest>
+<latest>now</latest>
+</search>
+<option name="charting.chart">line</option>
+<option name="charting.drilldown">none</option>
+<option name="charting.legend.mode">seriesCompare</option>
+</chart>
+</panel>
+</row>
+<row>
+<panel>
+<title>Privileged Logons – Administrator or Service Accounts (Event ID 4672)</title>
+<chart>
+<title>Highlights high-privilege logons granted to administrator or service accounts, which could indicate privilege escalation.</title>
+<search>
+<query>index=soclab sourcetype="xml_security" | rex "<EventID>(?<EventID>\d+)</EventID>" | search EventID=4672 | timechart count span=1h</query>
+<earliest>-24h@h</earliest>
+<latest>now</latest>
+</search>
+<option name="charting.chart">line</option>
+<option name="charting.drilldown">none</option>
+<option name="charting.legend.mode">seriesCompare</option>
+</chart>
+</panel>
+</row>
+<row>
+<panel>
+<title>Permission and Policy Modifications (Event ID 4907)</title>
+<chart>
+<title>Monitors events involving permission or security descriptor changes — key for detecting potential insider or privilege abuse.</title>
+<search>
+<query>index=soclab sourcetype="xml_security" | rex "<EventID>(?<EventID>\d+)</EventID>" | search EventID=4907 | timechart count span=1h</query>
+<earliest>-24h@h</earliest>
+<latest>now</latest>
+</search>
+<option name="charting.chart">line</option>
+<option name="charting.drilldown">none</option>
+<option name="charting.legend.mode">seriesCompare</option>
+</chart>
+</panel>
+</row>
+<row>
+<panel>
+<title>Credential Access Activity by Host (Event ID 5379)</title>
+<chart>
+<title>Shows how frequently credential read attempts occurred per host, useful for identifying possible credential harvesting or dumping activity.</title>
+<search>
+<query>index=soclab sourcetype="xml_security" | rex "<EventID>(?<EventID>\d+)</EventID>" | search EventID=5379 | stats count by host</query>
+<earliest>-24h@h</earliest>
+<latest>now</latest>
+</search>
+<option name="charting.chart">pie</option>
+<option name="charting.drilldown">none</option>
+</chart>
+</panel>
+</row>
+<row>
+<panel>
+<title>Security Events Overview by Category (Sysmon + Security Logs)</title>
+<chart>
+<title>Aggregates major security event types — logons, process creation, permission changes, and credential reads — into a unified timeline for visibility across all hosts.</title>
+<search>
+<query>index=soclab sourcetype="xml_security" | rex "<EventID>(?<EventID>\d+)</EventID>" | eval EventLabel=case( EventID=4624, "Logon Success", EventID=4672, "Admin Logon", EventID=4688, "Process Creation", EventID=4907, "Permission Change", EventID=5379, "Credential Read", EventID=4798 OR EventID=4799, "Group Enumeration", 1=1, "Other") | timechart count by EventLabel span=1h</query>
+<earliest>-24h@h</earliest>
+<latest>now</latest>
+</search>
+<option name="charting.chart">line</option>
+<option name="charting.drilldown">none</option>
+<option name="charting.legend.mode">seriesCompare</option>
+</chart>
+</panel>
+</row>
+<row>
+<panel>
+<title>Event Distribution: Sysmon vs Windows Security Sources</title>
+<chart>
+<title>Shows the proportion of total indexed events collected from Sysmon telemetry and Windows Security logs, helping validate data source coverage in the SOC environment.</title>
+<search>
+<query>index=soclab | rex "<EventID>(?<EventID>\d+)</EventID>" | eval SourceType=if(sourcetype="xml_security","Windows Security","Sysmon") | stats count by SourceType</query>
+<earliest>-24h@h</earliest>
+<latest>now</latest>
+</search>
+<option name="charting.chart">pie</option>
+<option name="charting.drilldown">none</option>
+</chart>
+</panel>
+</row>
+</form>
