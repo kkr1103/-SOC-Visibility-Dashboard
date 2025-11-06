@@ -1,4 +1,4 @@
-# -SOC-Visibility-Dashboard
+# SOC-Visibility-Dashboard
 Splunk-based SOC Visibility Dashboard that analyzes Windows Security and Sysmon logs to visualize endpoint and authentication activities.
 1. Overview
 The SOC Visibility Dashboard is a Splunk-based project developed to simulate a Security Operations Center (SOC) environment. It analyzes Windows Security and Sysmon logs to visualize authentication activities, privilege escalations, credential access, and policy changes. The project demonstrates how a SOC can detect endpoint and user activity trends using Splunk’s data analysis and visualization capabilities.
